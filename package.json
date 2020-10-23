@@ -1,6 +1,6 @@
 {
   "name": "async-try-catch-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "async-try-catch-loader",
   "main": "index.js",
   "scripts": {},
@@ -11,7 +11,10 @@
     "async-try-catch-loader"
   ],
   "author": "",
-  "git": "https://github.com/Wangzhzh0723/async-try-catch-loader.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wangzhzh0723/async-try-catch-loader.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.12.3",
