@@ -1,0 +1,22 @@
+{
+  "name": "try-catch-loader",
+  "version": "1.0.0",
+  "description": "try-catch-loader",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "webpack",
+    "loader",
+    "try-catch",
+    "try-catch-loader"
+  ],
+  "author": "",
+  "git": "https://github.com/Wangzhzh0723/try-catch-loader.git",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/parser": "^7.12.3",
+    "@babel/traverse": "^7.12.1",
+    "@babel/types": "^7.12.1"
+  }
+}
