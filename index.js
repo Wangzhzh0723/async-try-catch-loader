@@ -2,29 +2,40 @@
  * @Author: Jonath
  * @Date: 2020-10-23 10:28:03
  * @LastEditors: Jonath
- * @LastEditTime: 2020-10-23 15:04:41
+ * @LastEditTime: 2020-10-23 16:54:12
  * @Description: webpack try catch loader
  */
 const { parse } = require("@babel/parser")
 const traverse = require("@babel/traverse").default
 const t = require("@babel/types")
 const core = require("@babel/core")
+const loaderUtils = require("loader-utils")
 
-function createTryStatementAndUpdate(path, statement) {
+function createTryStatementAndUpdate(
+  path,
+  statement,
+  catchArg = "e",
+  catchPaddingStr
+) {
   // catch 标识
   const catchIdentifier = t.identifier("e")
   // catch body
-  const catchClauseBlockStatement = [
-    t.expressionStatement(
-      t.callExpression(
-        t.memberExpression(t.identifier("console"), t.identifier("log")),
-        [t.stringLiteral("错误"), catchIdentifier]
+  let catchClauseBlockStatement
+  if (!catchPaddingStr) {
+    catchClauseBlockStatement = [
+      t.expressionStatement(
+        t.callExpression(
+          t.memberExpression(t.identifier("console"), t.identifier("log")),
+          [t.stringLiteral("错误"), catchIdentifier]
+        )
       )
-    )
-  ]
+    ]
+  } else {
+    catchClauseBlockStatement = parse(catchPaddingStr).program.body
+  }
   // catch 子句
   const catchClause = t.catchClause(
-    catchIdentifier,
+    t.identifier(catchArg),
     t.blockStatement(catchClauseBlockStatement)
   )
   // try-catch 语句
@@ -34,8 +45,15 @@ function createTryStatementAndUpdate(path, statement) {
 
 // webpack loader normal 默认导出一个函数
 module.exports = function(source) {
+  const options = {
+    argument: "e",
+    padding: "",
+    ...(loaderUtils.getOptions(this) || {})
+  }
+
   // 解析ast语法树
   const ast = parse(source)
+
   const cachePath = new Set()
   traverse(ast, {
     AwaitExpression(path) {
@@ -49,7 +67,9 @@ module.exports = function(source) {
       asyncMethodPath &&
         createTryStatementAndUpdate(
           asyncMethodPath,
-          asyncMethodPath.node.body.body
+          asyncMethodPath.node.body.body,
+          options.argument,
+          options.padding
         )
     }
   })
